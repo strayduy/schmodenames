@@ -36,7 +36,7 @@ export default React.createClass({
                             <input type="number" className="form-control" value={gameSeed} onChange={this.handleGameSeedChange} min="1" max={MAX_GAME_SEED} />
                         </div>
                     </div>
-                    <Link className="btn btn-lg btn-block btn-success" to={`/${role}/grid/${gameSeed}`}>Play</Link>
+                    <Link className="btn btn-lg btn-block btn-success" to={`/${role}/game/${gameSeed}`}>Play</Link>
                 </div>
             </div>
         )
