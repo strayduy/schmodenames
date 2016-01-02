@@ -2,6 +2,7 @@ import * as _ from 'lodash';
 import React from 'react';
 import seedrandom from 'seedrandom';
 import {seededShuffle} from '../utils';
+import {wordList} from '../word-list';
 
 const NUM_CELLS = 25;
 const CELLS_PER_ROW = 5;
@@ -21,23 +22,40 @@ export default React.createClass({
             first_team: first_team,
             second_team: second_team,
             cells: cells,
+            shouldShowWords: false,
         };
     },
     getShuffledCells: function(gameSeed, first_team, second_team) {
         let cells = [];
+        let words = wordList.slice(0);
 
-        for (let i = 0; i < NUM_CELLS; i++) {
-            cells[i] = {class: 'neutral'};
-        }
+        // Populate the list of cells with the appropriate number of each type of word
+        _.times(NUM_FIRST_TEAM_WORDS, () => {
+            cells.push({className: first_team});
+        });
+        _.times(NUM_SECOND_TEAM_WORDS, () => {
+            cells.push({className: second_team});
+        });
+        cells.push({className: 'assassin'});
+        _.times(NUM_CELLS - NUM_FIRST_TEAM_WORDS - NUM_SECOND_TEAM_WORDS - 1, () => {
+            cells.push({className: 'neutral'});
+        });
 
-        cells[0] = {class: 'assassin'};
-        _.fill(cells, {class: first_team}, 1, 1 + NUM_FIRST_TEAM_WORDS);
-        _.fill(cells, {class: second_team}, 1 + NUM_FIRST_TEAM_WORDS, 1 + NUM_FIRST_TEAM_WORDS + NUM_SECOND_TEAM_WORDS);
-
-        // Shuffle in place
+        // Shuffle cells in place
         seededShuffle(cells, gameSeed);
 
+        // Shuffle the word list, too
+        seededShuffle(words, gameSeed);
+
+        // Assign a word (randomly chosen via shuffle) to each cell
+        _.forEach(cells, (cell, i) => {
+            cell.word = words[i];
+        });
+
         return cells;
+    },
+    toggleWords: function() {
+        this.setState({shouldShowWords: !this.state.shouldShowWords});
     },
     render: function() {
         let heading = `Game #${this.state.gameSeed}`;
@@ -45,6 +63,24 @@ export default React.createClass({
         let first_team_name = `${_.capitalize(this.state.first_team)} Team`;
         let cells = this.state.cells;
         let rows = _.chunk(cells, CELLS_PER_ROW);
+        let shouldShowWords = this.state.shouldShowWords;
+
+        let toggleWordsBtn;
+
+        if (shouldShowWords) {
+            toggleWordsBtn = (
+                <button type="button" className="btn btn-lg btn-block btn-default" onClick={this.toggleWords}>
+                    Hide Words
+                </button>
+            );
+        }
+        else {
+            toggleWordsBtn = (
+                <button type="button" className="btn btn-lg btn-block btn-warning" onClick={this.toggleWords}>
+                    Show Words
+                </button>
+            );
+        }
 
         return (
             <div>
@@ -52,15 +88,16 @@ export default React.createClass({
 
                 <p className="text-center"><span className={first_team_css}>{first_team_name}</span> goes first</p>
 
-                <table className="table table-bordered schmodenames-grid">
+                <table className="table table-bordered text-center schmodenames-grid">
                     <tbody>
                         {rows.map(function(cells, i) {
                             return (
                                 <tr key={i}>
                                     {cells.map(function(cell, j) {
                                         return (
-                                            <td className={cell.class} key={j}>
-                                            &nbsp;
+                                            <td className={cell.className} key={j}>
+                                                {/* 00a0 == unicode non-breaking space */}
+                                                {shouldShowWords ? <small>{cell.word}</small> : '\u00a0'}
                                             </td>
                                         )
                                     })}
@@ -69,6 +106,8 @@ export default React.createClass({
                         })}
                     </tbody>
                 </table>
+
+                {toggleWordsBtn}
             </div>
         )
     }
