@@ -4,12 +4,10 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Document</title>
+    <title>Schmodenames</title>
     <link href="{{ url_for('static', filename='vendor/css/bootstrap.min.css') }}" rel="stylesheet">
     <style>
-      .text-smallcaps {
-        font-variant: small-caps;
-      }
+      /* Grid colors */
       .red {
         background-color: red;
         color: white;
@@ -26,15 +24,22 @@
         background-color: black;
         color: white;
       }
+      .schmodenames-grid, .schmodenames-grid > tbody > tr > td {
+        border-color: black;
+      }
+
+      /* Layout */
       .form-horizontal .form-group-lg .control-label {
         font-size: 18px;
         padding-top: 11px;
       }
-      .schmodenames-grid, .schmodenames-grid > tbody > tr > td {
-        border-color: black;
-      }
+
+      /* Misc */
       .team-name-label {
         padding: 3px;
+      }
+      .text-smallcaps {
+        font-variant: small-caps;
       }
     </style>
   </head>
