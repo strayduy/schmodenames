@@ -40,26 +40,36 @@ export default React.createClass({
         return cells;
     },
     render: function() {
+        let heading = `Game #${this.state.gameSeed}`;
+        let first_team_css = `${this.state.first_team} team-name-label`;
+        let first_team_name = `${_.capitalize(this.state.first_team)} Team`;
         let cells = this.state.cells;
         let rows = _.chunk(cells, CELLS_PER_ROW);
 
         return (
-            <table>
-                <tbody>
-                    {rows.map(function(cells, i) {
-                        return (
-                            <tr key={i}>
-                                {cells.map(function(cell, j) {
-                                    return (
-                                        <td className={cell.class} key={j}>
-                                        </td>
-                                    )
-                                })}
-                            </tr>
-                        )
-                    })}
-                </tbody>
-            </table>
+            <div>
+                <h1 className="text-center text-uppercase">{heading}</h1>
+
+                <p className="text-center"><span className={first_team_css}>{first_team_name}</span> goes first</p>
+
+                <table className="table table-bordered schmodenames-grid">
+                    <tbody>
+                        {rows.map(function(cells, i) {
+                            return (
+                                <tr key={i}>
+                                    {cells.map(function(cell, j) {
+                                        return (
+                                            <td className={cell.class} key={j}>
+                                            &nbsp;
+                                            </td>
+                                        )
+                                    })}
+                                </tr>
+                            )
+                        })}
+                    </tbody>
+                </table>
+            </div>
         )
     }
 });

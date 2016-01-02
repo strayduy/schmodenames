@@ -23,13 +23,21 @@ export default React.createClass({
     },
     render: function() {
         let role = this.state.role;
+        let heading = role == 'spymaster' ? 'Spymaster' : 'Field Operative';
         let gameSeed = this.state.gameSeed;
 
         return (
             <div>
-                <input type="number" value={gameSeed} onChange={this.handleGameSeedChange} min="1" max={MAX_GAME_SEED} />
-                <br />
-                <Link to={`/${role}/grid/${gameSeed}`}>Go</Link>
+                <h1 className="text-center text-uppercase">{heading}</h1>
+                <div className="form-horizontal">
+                    <div className="form-group form-group-lg">
+                        <label htmlFor="game-seed" className="col-xs-4 col-sm-2 control-label">Game #</label>
+                        <div className="col-xs-8 col-sm-10">
+                            <input type="number" className="form-control" value={gameSeed} onChange={this.handleGameSeedChange} min="1" max={MAX_GAME_SEED} />
+                        </div>
+                    </div>
+                    <Link className="btn btn-lg btn-block btn-success" to={`/${role}/grid/${gameSeed}`}>Play</Link>
+                </div>
             </div>
         )
     }
