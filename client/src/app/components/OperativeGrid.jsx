@@ -4,12 +4,13 @@ import {connect} from 'react-redux';
 
 const CELLS_PER_ROW = 5;
 
-export const OperativeGrid = React.createClass({
+export class OperativeGrid extends React.Component {
     componentWillMount() {
         let gameSeed = this.props.params.gameSeed;
         this.props.dispatch({type: 'CREATE_GRID', gameSeed: gameSeed});
-    },
-    render: function() {
+    }
+
+    render() {
         let grid = this.props.grid;
         let heading = `Game #${grid.gameSeed}`;
         let firstTeamCss = `${grid.firstTeam} team-name-label`;
@@ -43,7 +44,7 @@ export const OperativeGrid = React.createClass({
             </div>
         )
     }
-});
+};
 
 function mapStateToProps(state) {
     return {

@@ -1,8 +1,8 @@
 import React from 'react';
 import {Link} from 'react-router';
 
-export default React.createClass({
-    render: function() {
+export default class RoleSelection extends React.Component {
+    render() {
         return (
             <div>
                 <h1 className="text-center text-uppercase">Schmodenames</h1>
@@ -27,4 +27,4 @@ export default React.createClass({
             </div>
         )
     }
-});
+};

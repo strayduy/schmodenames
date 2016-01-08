@@ -4,20 +4,25 @@ import {connect} from 'react-redux';
 
 const CELLS_PER_ROW = 5;
 
-export const SpymasterGrid = React.createClass({
-    getInitialState: function() {
-        return {
+export class SpymasterGrid extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
             shouldShowWords: false,
         };
-    },
+        this.toggleWords = this.toggleWords.bind(this);
+    }
+
     componentWillMount() {
         let gameSeed = this.props.params.gameSeed;
         this.props.dispatch({type: 'CREATE_GRID', gameSeed: gameSeed});
-    },
-    toggleWords: function() {
+    }
+
+    toggleWords() {
         this.setState({shouldShowWords: !this.state.shouldShowWords});
-    },
-    render: function() {
+    }
+
+    render() {
         let grid = this.props.grid;
         let heading = `Game #${grid.gameSeed}`;
         let firstTeamCss = `${grid.firstTeam} team-name-label`;
@@ -51,10 +56,10 @@ export const SpymasterGrid = React.createClass({
 
                 <table className="table table-bordered text-center schmodenames-grid">
                     <tbody>
-                        {rows.map(function(cells, i) {
+                        {rows.map((cells, i) => {
                             return (
                                 <tr key={i}>
-                                    {cells.map(function(cell, j) {
+                                    {cells.map((cell, j) => {
                                         return (
                                             <td className={cell.className} key={j}>
                                                 {/* 00a0 == unicode non-breaking space */}
@@ -72,7 +77,7 @@ export const SpymasterGrid = React.createClass({
             </div>
         )
     }
-});
+};
 
 function mapStateToProps(state) {
     return {

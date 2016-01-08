@@ -4,24 +4,28 @@ import {Link} from 'react-router';
 
 const MAX_GAME_SEED = 10000;
 
-export default React.createClass({
-    getInitialState: function() {
+export default class GameSelection extends React.Component {
+    constructor(props) {
+        super(props);
+
         let role = 'field-operative';
 
         if (_.startsWith(this.props.location.pathname, '/spymaster')) {
             role = 'spymaster';
         }
 
-        return {
+        this.state = {
             // Random int between 1 and MAX_GAME_SEED (inclusive)
             gameSeed: Math.floor((Math.random() * MAX_GAME_SEED) + 1),
             role: role,
         };
-    },
-    handleGameSeedChange: function(event) {
+    }
+
+    handleGameSeedChange(event) {
         this.setState({gameSeed: event.target.value});
-    },
-    render: function() {
+    }
+
+    render() {
         let role = this.state.role;
         let heading = role == 'spymaster' ? 'Spymaster' : 'Field Operative';
         let gameSeed = this.state.gameSeed;
@@ -41,4 +45,4 @@ export default React.createClass({
             </div>
         )
     }
-});
+};

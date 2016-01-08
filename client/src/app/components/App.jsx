@@ -1,7 +1,7 @@
 import React from 'react';
 
-export default React.createClass({
-    render: function() {
+export default class App extends React.Component {
+    render() {
         return React.cloneElement(this.props.children, {});
     }
-});
+};
