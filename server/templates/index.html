@@ -26,12 +26,34 @@
       }
       .schmodenames-grid, .schmodenames-grid > tbody > tr > td {
         border-color: black;
+        cursor: pointer;
+      }
+
+      /* Button colors */
+      .btn.red:focus,
+      .btn.red:hover,
+      .btn.blue:focus,
+      .btn.blue:hover,
+      .btn.neutral:focus,
+      .btn.neutral:hover,
+      .btn.assassin:focus,
+      .btn.assassin:hover {
+        color: white;
+      }
+      .btn.clear {
+        background-color: white;
+        border: 1px solid black;
+        color: black;
       }
 
       /* Layout */
       .form-horizontal .form-group-lg .control-label {
         font-size: 18px;
         padding-top: 11px;
+      }
+
+      .color-select-modal .btn:not(:last-child) {
+        margin-bottom: 20px;
       }
 
       /* Misc */

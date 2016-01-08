@@ -56,6 +56,22 @@ function getShuffledCells(gameSeed, firstTeam, secondTeam) {
     return cells;
 }
 
+function markCell(grid, selectedWord, color) {
+    let new_grid = _.assign({}, grid);
+    let cells = [];
+
+    _.forEach(grid.cells, (cell, i) => {
+        if (cell.word === selectedWord) {
+            cell.color = color;
+        }
+        cells.push(cell);
+    });
+
+    new_grid.cells = cells;
+
+    return new_grid;
+}
+
 const INITIAL_STATE = {grid: {}};
 
 export default function(state = INITIAL_STATE, action) {
@@ -63,6 +79,10 @@ export default function(state = INITIAL_STATE, action) {
         case 'CREATE_GRID':
             return {
                 grid: createGrid(action.gameSeed)
+            };
+        case 'MARK_CELL':
+            return {
+                grid: markCell(state.grid, action.selectedWord, action.color)
             };
     }
     return state;
