@@ -37,7 +37,7 @@ export default class GameSelection extends React.Component {
                     <div className="form-group form-group-lg">
                         <label htmlFor="game-seed" className="col-xs-4 col-sm-2 control-label">Game #</label>
                         <div className="col-xs-8 col-sm-10">
-                            <input type="number" className="form-control" value={gameSeed} onChange={this.handleGameSeedChange} min="1" max={MAX_GAME_SEED} />
+                            <input type="number" className="form-control" value={gameSeed} onChange={this.handleGameSeedChange.bind(this)} min="1" max={MAX_GAME_SEED} />
                         </div>
                     </div>
                     <Link className="btn btn-lg btn-block btn-success" to={`/${role}/game/${gameSeed}`}>Play</Link>
