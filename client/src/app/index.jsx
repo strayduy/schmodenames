@@ -15,6 +15,11 @@ import {OperativeGridContainer} from './components/OperativeGrid';
 
 const store = createStore(reducer);
 
+// Wire up Google Analytics to the router
+browserHistory.listen(function(location) {
+    window.ga('send', 'pageview', location.pathname);
+});
+
 ReactDOM.render((
     <Provider store={store}>
         <Router history={browserHistory}>
