@@ -101,7 +101,7 @@ const wordList = [
     "lead",
     "lemon",
     "limousine",
-    "leadlock",
+    "lock",
     "log",
     "mammoth",
     "maple",
