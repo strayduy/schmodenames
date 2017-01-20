@@ -8,7 +8,7 @@ export class SpymasterGrid extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            shouldShowWords: false,
+            shouldShowWords: true,
         };
         this.toggleWords = this.toggleWords.bind(this);
     }
@@ -20,6 +20,10 @@ export class SpymasterGrid extends React.Component {
 
     toggleWords() {
         this.setState({shouldShowWords: !this.state.shouldShowWords});
+    }
+
+    toggleGuess(i, j) {
+        this.props.dispatch({type: 'TOGGLE_GUESS', i: i, j: j});
     }
 
     render() {
@@ -61,7 +65,7 @@ export class SpymasterGrid extends React.Component {
                                 <tr key={i}>
                                     {cells.map((cell, j) => {
                                         return (
-                                            <td className={cell.className} key={j}>
+                                            <td className={cell.className} key={j} onClick={this.toggleGuess.bind(this, i, j)}>
                                                 {/* 00a0 == unicode non-breaking space */}
                                                 {shouldShowWords ? <small>{cell.word}</small> : '\u00a0'}
                                             </td>

@@ -72,6 +72,22 @@ function markCell(grid, selectedWord, color) {
     return new_grid;
 }
 
+function toggleGuess(grid, i, j) {
+    let new_grid = _.assign({}, grid);
+    let css_classes = new_grid.cells[i * CELLS_PER_ROW + j].className.split(' ');
+
+    if (css_classes.includes('guessed')) {
+        css_classes = css_classes.filter(c => c !== 'guessed');
+    }
+    else {
+        css_classes.push('guessed');
+    }
+
+    new_grid.cells[i * CELLS_PER_ROW + j].className = css_classes.join(' ');
+
+    return new_grid;
+}
+
 const INITIAL_STATE = {grid: {}};
 
 export default function(state = INITIAL_STATE, action) {
@@ -83,6 +99,10 @@ export default function(state = INITIAL_STATE, action) {
         case 'MARK_CELL':
             return {
                 grid: markCell(state.grid, action.selectedWord, action.color)
+            };
+        case 'TOGGLE_GUESS':
+            return {
+                grid: toggleGuess(state.grid, action.i, action.j)
             };
     }
     return state;
