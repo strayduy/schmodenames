@@ -24,6 +24,16 @@ export default class RoleSelection extends React.Component {
                         </Link>
                     </div>
                 </div>
+
+                <div className="row">
+                    <div className="col-xs-12" style={{marginTop: '30px'}}>
+                        <div className="text-center">
+                            <Link className="btn btn-lg btn-link" to="/duet">
+                                Switch to Duet Mode
+                            </Link>
+                        </div>
+                    </div>
+                </div>
             </div>
         )
     }

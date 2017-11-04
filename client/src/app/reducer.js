@@ -11,6 +11,9 @@ const NUM_CELLS = 25;
 const CELLS_PER_ROW = 5;
 const NUM_FIRST_TEAM_WORDS = 9;
 const NUM_SECOND_TEAM_WORDS = 8;
+const NUM_DUET_WORDS_PER_PLAYER = 5;
+const NUM_DUET_WORDS_SHARED = 3;
+const DEFAULT_CLUES_REMAINING = 9;
 
 function createGrid(gameSeed) {
     let rng = seedrandom(gameSeed);
@@ -88,22 +91,131 @@ function toggleGuess(grid, i, j) {
     return new_grid;
 }
 
+function createDuetGrid(player, gameSeed) {
+    let rng = seedrandom(gameSeed);
+    let cells = getShuffledDuetCells(player, gameSeed);
+
+    return {
+        gameSeed: gameSeed,
+        player: player,
+        cells: cells,
+    };
+}
+
+function getShuffledDuetCells(player, gameSeed) {
+    let cells = [];
+    let words = wordList.slice(0);
+
+    // 5 red-neutral
+    // 5 neutral-blue
+    // 3 red-blue
+    // 1 assassin-assassin
+    // 1 red-assassin
+    // 1 neutral-assassin
+    // 1 assassin-blue
+    // 1 assassin-neutral
+    // 7 neutral-neutral
+
+    // Populate the list of cells with the appropriate number of each type of word
+    _.times(NUM_DUET_WORDS_PER_PLAYER, () => {
+        cells.push({value: 'red-neutral'});
+        cells.push({value: 'neutral-blue'});
+    });
+    _.times(NUM_DUET_WORDS_SHARED, () => {
+        cells.push({value: 'red-blue'});
+    });
+    cells.push({value: 'assassin-assassin'});
+    cells.push({value: 'red-assassin'});
+    cells.push({value: 'neutral-assassin'});
+    cells.push({value: 'assassin-blue'});
+    cells.push({value: 'assassin-neutral'});
+    _.times(NUM_CELLS - NUM_DUET_WORDS_PER_PLAYER * 2 - NUM_DUET_WORDS_SHARED - 5, () => {
+        cells.push({value: 'neutral-neutral'});
+    });
+
+    // Shuffle cells in place
+    seededShuffle(cells, gameSeed);
+
+    // Shuffle the word list, too
+    seededShuffle(words, gameSeed);
+
+    // Assign a word (randomly chosen via shuffle) to each cell
+    _.forEach(cells, (cell, i) => {
+        cell.word = words[i];
+
+        let className = '';
+        if (player === 'player-1') {
+            switch (cell.value.split('-')[0]) {
+                case 'red':
+                    className = 'neutral';
+                    break;
+                case 'assassin':
+                    className = 'assassin';
+                    break;
+            }
+        }
+        else if (player === 'player-2') {
+            switch (cell.value.split('-')[1]) {
+                case 'blue':
+                    className = 'neutral';
+                    break;
+                case 'assassin':
+                    className = 'assassin';
+                    break;
+            }
+        }
+
+        cell.className = className;
+    });
+
+    return cells;
+}
+
+function markDuetCell(grid, selectedWord, color) {
+    let new_grid = _.assign({}, grid);
+    let cells = [];
+
+    _.forEach(grid.cells, (cell, i) => {
+        if (cell.word === selectedWord) {
+            cell.className = color;
+        }
+        cells.push(cell);
+    });
+
+    new_grid.cells = cells;
+
+    return new_grid;
+}
+
 const INITIAL_STATE = {grid: {}};
 
 export default function(state = INITIAL_STATE, action) {
+    let new_state = _.assign({}, state);
     switch (action.type) {
         case 'CREATE_GRID':
-            return {
-                grid: createGrid(action.gameSeed)
-            };
+            new_state.grid = createGrid(action.gameSeed);
+            break;
         case 'MARK_CELL':
-            return {
-                grid: markCell(state.grid, action.selectedWord, action.color)
-            };
+            new_state.grid = markCell(state.grid, action.selectedWord, action.color);
+            break;
         case 'TOGGLE_GUESS':
-            return {
-                grid: toggleGuess(state.grid, action.i, action.j)
-            };
+            new_state.grid = toggleGuess(state.grid, action.i, action.j);
+            break;
+        case 'CREATE_DUET_GRID':
+            new_state.grid = createDuetGrid(action.player, action.gameSeed);
+            new_state.cluesRemaining = 9;
+            break;
+        case 'MARK_DUET_CELL':
+            new_state.grid = markDuetCell(state.grid, action.selectedWord, action.color);
+            break;
+        case 'INCREMENT_CLUES_REMAINING':
+            new_state.cluesRemaining = state.cluesRemaining + 1;
+            break;
+        case 'DECREMENT_CLUES_REMAINING':
+            if (state.cluesRemaining > 0) {
+                new_state.cluesRemaining = state.cluesRemaining - 1;
+            }
+            break;
     }
-    return state;
+    return new_state;
 }
