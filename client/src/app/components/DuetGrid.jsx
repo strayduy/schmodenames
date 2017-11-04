@@ -51,6 +51,14 @@ export class DuetGrid extends React.Component {
         this.closeModal();
     }
 
+    incrementCluesRemaining() {
+        this.props.dispatch({type: 'INCREMENT_CLUES_REMAINING'});
+    }
+
+    decrementCluesRemaining() {
+        this.props.dispatch({type: 'DECREMENT_CLUES_REMAINING'});
+    }
+
     render() {
         let grid = this.props.grid;
         let heading = `Game #${grid.gameSeed}`;
@@ -63,6 +71,7 @@ export class DuetGrid extends React.Component {
             },
         };
         let selectedWord = this.state.selectedWord;
+        let cluesRemaining = this.props.cluesRemaining;
 
         return (
             <div>
@@ -85,6 +94,17 @@ export class DuetGrid extends React.Component {
                         })}
                     </tbody>
                 </table>
+
+                <div className="clues-remaining-container text-center">
+                    <div>
+                        <strong>Clues remaining</strong>
+                    </div>
+                    <div>
+                        <button className="btn btn-link btn-lg" onClick={this.decrementCluesRemaining.bind(this)}>&#10134;</button>
+                        {cluesRemaining}
+                        <button className="btn btn-link btn-lg" onClick={this.incrementCluesRemaining.bind(this)}>&#10133;</button>
+                    </div>
+                </div>
 
                 <Modal
                     className="Modal__Bootstrap modal-dialog color-select-modal"
@@ -115,6 +135,7 @@ export class DuetGrid extends React.Component {
 function mapStateToProps(state) {
     return {
         'grid': state.grid,
+        'cluesRemaining': state.cluesRemaining,
     };
 }
 

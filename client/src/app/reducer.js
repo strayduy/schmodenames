@@ -13,6 +13,7 @@ const NUM_FIRST_TEAM_WORDS = 9;
 const NUM_SECOND_TEAM_WORDS = 8;
 const NUM_DUET_WORDS_PER_PLAYER = 5;
 const NUM_DUET_WORDS_SHARED = 3;
+const DEFAULT_CLUES_REMAINING = 9;
 
 function createGrid(gameSeed) {
     let rng = seedrandom(gameSeed);
@@ -189,27 +190,32 @@ function markDuetCell(grid, selectedWord, color) {
 const INITIAL_STATE = {grid: {}};
 
 export default function(state = INITIAL_STATE, action) {
+    let new_state = _.assign({}, state);
     switch (action.type) {
         case 'CREATE_GRID':
-            return {
-                grid: createGrid(action.gameSeed)
-            };
+            new_state.grid = createGrid(action.gameSeed);
+            break;
         case 'MARK_CELL':
-            return {
-                grid: markCell(state.grid, action.selectedWord, action.color)
-            };
+            new_state.grid = markCell(state.grid, action.selectedWord, action.color);
+            break;
         case 'TOGGLE_GUESS':
-            return {
-                grid: toggleGuess(state.grid, action.i, action.j)
-            };
+            new_state.grid = toggleGuess(state.grid, action.i, action.j);
+            break;
         case 'CREATE_DUET_GRID':
-            return {
-                grid: createDuetGrid(action.player, action.gameSeed)
-            };
+            new_state.grid = createDuetGrid(action.player, action.gameSeed);
+            new_state.cluesRemaining = 9;
+            break;
         case 'MARK_DUET_CELL':
-            return {
-                grid: markDuetCell(state.grid, action.selectedWord, action.color)
-            };
+            new_state.grid = markDuetCell(state.grid, action.selectedWord, action.color);
+            break;
+        case 'INCREMENT_CLUES_REMAINING':
+            new_state.cluesRemaining = state.cluesRemaining + 1;
+            break;
+        case 'DECREMENT_CLUES_REMAINING':
+            if (state.cluesRemaining > 0) {
+                new_state.cluesRemaining = state.cluesRemaining - 1;
+            }
+            break;
     }
-    return state;
+    return new_state;
 }
