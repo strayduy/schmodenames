@@ -24,12 +24,12 @@ export class DuetGrid extends React.Component {
         let player = this.props.params.player;
         let grid = this.props.grid;
         let cell = grid.cells[i * CELLS_PER_ROW + j];
-        let cell_value = cell.value.split('-')[player === 'player-1' ? 0 : 1];
+        let cellValue = cell.value.split('-')[player === 'player-1' ? 0 : 1];
 
-        if ((player === 'player-1' && cell_value === 'red') || (player === 'player-2' && cell_value === 'blue')) {
+        if ((player === 'player-1' && cellValue === 'red') || (player === 'player-2' && cellValue === 'blue')) {
             this.props.dispatch({type: 'TOGGLE_GUESS', i: i, j: j});
         }
-        else if (cell_value === 'neutral') {
+        else if (cellValue === 'neutral' || cellValue === 'assassin') {
             this.openModal(cell.word);
         }
     }
